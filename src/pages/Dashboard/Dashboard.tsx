@@ -3,7 +3,7 @@ import React from 'react';
 const Dashboard: React.FC = () => {
   return (
   <div>
-    This is the Dashboard component.
+    <h1>This is the Dashboard component.</h1>
   </div>
   );
 };
