@@ -2,7 +2,7 @@ const express = require("express");
 const crypto = require("crypto");
 const cookie = require("cookie");
 const { passwordSecret, fakeUser } = require("./data");
-const { getTokens, refreshTokenTokenAge } = require("./utils");
+const { getTokens, refreshTokenTokenAge, verifyAuthorizationMiddleware } = require("./utils");
 
 
 const authRouter = express.Router();
@@ -31,6 +31,10 @@ authRouter.post("/login", (req, res) => {
     );
     
     res.send({accessToken});
+});
+
+authRouter.get("/profile", verifyAuthorizationMiddleware, (req,res) => {
+    res.send("admin");
 });
 
 authRouter.get("/logout", (req,res) => {
