@@ -2,7 +2,7 @@ const express = require("express");
 const crypto = require("crypto");
 const cookie = require("cookie");
 const { passwordSecret, fakeUser } = require("./data");
-const { getTokens, refreshTokenTokenAge, verifyAuthorizationMiddleware } = require("./utils");
+const { getTokens, refreshTokenTokenAge, verifyAuthorizationMiddleware, verifyRefreshMiddleware } = require("./utils");
 
 
 const authRouter = express.Router();
@@ -27,10 +27,35 @@ authRouter.post("/login", (req, res) => {
         cookie.serialize("refreshToken", refreshToken, {
             httpOnly: true,
             maxAge: refreshTokenTokenAge,
+            sameSite: "None",
+            secure: true,
         })
     );
     
     res.send({accessToken});
+});
+
+const setAccessToken = (accessToken) => ({
+    type: 'SET_ACCESS_TOKEN',
+    payload: accessToken,
+  });
+
+authRouter.get("/refresh", verifyRefreshMiddleware, (req,res) => {
+    const { accessToken, refreshToken } = getTokens(req.user.login);
+    // console.log("getTokens(req.user.login)" + getTokens(req.user.login));
+    // res.send("getTokens(req.user.login)" + getTokens(req.user.login));
+
+    res.setHeader(
+        "Set-Cookie",
+        cookie.serialize("refreshToken", refreshToken, {
+            httpOnly: true,
+            maxAge: 1000 * 60 *60,
+            sameSite: "None",
+            secure: true,
+        })
+    );
+    // res.send({accessToken});
+    res.json({ accessToken }); 
 });
 
 authRouter.get("/profile", verifyAuthorizationMiddleware, (req,res) => {
@@ -43,6 +68,8 @@ authRouter.get("/logout", (req,res) => {
         cookie.serialize("refreshToken", "", {
             httpOnly: true,
             maxAge: 0,
+            sameSite: "None",
+            secure: true,
         })
     );
     res.sendStatus(200);
