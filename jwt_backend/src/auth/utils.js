@@ -5,7 +5,6 @@ const signatureRefresh = "MySuP3R_z3kr3t_refresh";
 
 const accessTokenAge = 60*60; //s (1h)
 const refreshTokenTokenAge = 2*60*60; //s (2h)
-// const refreshTokenTokenAge = 25; //s (1h)
 
 const verifyAuthorizationMiddleware = (req,res,next) => {
     const token = req.headers.authorization ? req.headers.authorization.split(" ")[1] : "";

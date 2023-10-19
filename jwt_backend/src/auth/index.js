@@ -42,8 +42,6 @@ const setAccessToken = (accessToken) => ({
 
 authRouter.get("/refresh", verifyRefreshMiddleware, (req,res) => {
     const { accessToken, refreshToken } = getTokens(req.user.login);
-    // console.log("getTokens(req.user.login)" + getTokens(req.user.login));
-    // res.send("getTokens(req.user.login)" + getTokens(req.user.login));
 
     res.setHeader(
         "Set-Cookie",
@@ -54,8 +52,7 @@ authRouter.get("/refresh", verifyRefreshMiddleware, (req,res) => {
             secure: true,
         })
     );
-    // res.send({accessToken});
-    res.json({ accessToken }); 
+    res.send({accessToken});
 });
 
 authRouter.get("/profile", verifyAuthorizationMiddleware, (req,res) => {
