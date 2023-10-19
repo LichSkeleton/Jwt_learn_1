@@ -41,7 +41,7 @@ export const authReducer = createSlice({
       ...state,
       authData: {
         ...state.authData,
-        accessToken: action.payload,
+        accessToken: action.payload, // Here, you set the accessToken
         isLoading: false,
         error:  null,
       }
